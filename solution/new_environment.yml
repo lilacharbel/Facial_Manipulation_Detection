@@ -1,4 +1,4 @@
-name: ex4
+name: ex4_new
 channels:
   - pytorch
   - defaults

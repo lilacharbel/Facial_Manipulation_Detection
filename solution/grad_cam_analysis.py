@@ -12,8 +12,8 @@ from common import FIGURES_DIR
 from utils import load_dataset, load_model
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = 'cpu'
 
 # Arguments
 def parse_args():

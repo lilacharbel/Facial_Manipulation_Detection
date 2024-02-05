@@ -15,6 +15,9 @@ def normalize(image):
 def main():
     """Load the Deepfakes and Synthetic Faces datasets, sample real and fake
     images from them and plot them in a single image."""
+
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+
     # create deepfakes dataset
     fakes_dataset_train = load_dataset('fakes_dataset', 'train')
     # sample indices of real and fake images

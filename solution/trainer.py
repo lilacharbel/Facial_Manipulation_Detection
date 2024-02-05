@@ -10,8 +10,8 @@ from torch.utils.data import Dataset, DataLoader
 from common import OUTPUT_DIR, CHECKPOINT_DIR
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = 'cpu'
 
 @dataclass
 class LoggingParameters:
@@ -41,6 +41,9 @@ class Trainer:
         self.test_dataset = test_dataset
         self.epoch = 0
 
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
     def train_one_epoch(self) -> tuple[float, float]:
         """Train the model for a single epoch on the training dataset.
         Returns:
@@ -60,7 +63,22 @@ class Trainer:
         print_every = int(len(train_dataloader) / 10)
 
         for batch_idx, (inputs, targets) in enumerate(train_dataloader):
-            """INSERT YOUR CODE HERE."""
+
+            pred = self.model(inputs)
+
+            loss = self.criterion(pred, targets)
+
+            loss.backward()
+            self.optimizer.step()
+            self.optimizer.zero_grad()
+
+            total_loss += loss.item()
+            correct_labeled_samples += (pred.argmax(1) == targets).type(torch.float).sum().item()
+            nof_samples += int(targets.shape[0])
+
+            avg_loss = total_loss / nof_samples
+            accuracy = (correct_labeled_samples / nof_samples) * 100
+
             if batch_idx % print_every == 0 or \
                     batch_idx == len(train_dataloader) - 1:
                 print(f'Epoch [{self.epoch:03d}] | Loss: {avg_loss:.3f} | '
@@ -92,7 +110,19 @@ class Trainer:
         print_every = max(int(len(dataloader) / 10), 1)
 
         for batch_idx, (inputs, targets) in enumerate(dataloader):
-            """INSERT YOUR CODE HERE."""
+
+            with torch.no_grad():
+                pred = self.model(inputs)
+
+                loss = self.criterion(pred, targets)
+
+                total_loss += loss.item()
+                correct_labeled_samples += (pred.argmax(1) == targets).type(torch.float).sum().item()
+                nof_samples += int(targets.shape[0])
+
+                avg_loss = total_loss / nof_samples
+                accuracy = (correct_labeled_samples / nof_samples) * 100
+
             if batch_idx % print_every == 0 or batch_idx == len(dataloader) - 1:
                 print(f'Epoch [{self.epoch:03d}] | Loss: {avg_loss:.3f} | '
                       f'Acc: {accuracy:.2f}[%] '
