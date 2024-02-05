@@ -73,7 +73,7 @@ class Trainer:
             self.optimizer.zero_grad()
 
             total_loss += loss.item()
-            correct_labeled_samples += (pred.argmax(1) == targets).type(torch.float).sum().item()
+            correct_labeled_samples += int((pred.argmax(1) == targets).type(torch.float).sum().item())
             nof_samples += int(targets.shape[0])
 
             avg_loss = total_loss / nof_samples
@@ -117,7 +117,7 @@ class Trainer:
                 loss = self.criterion(pred, targets)
 
                 total_loss += loss.item()
-                correct_labeled_samples += (pred.argmax(1) == targets).type(torch.float).sum().item()
+                correct_labeled_samples += int((pred.argmax(1) == targets).type(torch.float).sum().item())
                 nof_samples += int(targets.shape[0])
 
                 avg_loss = total_loss / nof_samples
