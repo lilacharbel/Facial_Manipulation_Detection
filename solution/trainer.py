@@ -10,8 +10,7 @@ from torch.utils.data import Dataset, DataLoader
 from common import OUTPUT_DIR, CHECKPOINT_DIR
 
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = 'cpu'
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 @dataclass
 class LoggingParameters:
@@ -64,6 +63,8 @@ class Trainer:
 
         for batch_idx, (inputs, targets) in enumerate(train_dataloader):
 
+            inputs, targets = inputs.to(device), targets.to(device)
+
             pred = self.model(inputs)
 
             loss = self.criterion(pred, targets)
@@ -110,6 +111,8 @@ class Trainer:
         print_every = max(int(len(dataloader) / 10), 1)
 
         for batch_idx, (inputs, targets) in enumerate(dataloader):
+
+            inputs, targets = inputs.to(device), targets.to(device)
 
             with torch.no_grad():
                 pred = self.model(inputs)
