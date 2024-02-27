@@ -51,7 +51,31 @@ def get_grad_cam_visualization(test_dataset: torch.utils.data.Dataset,
         of batch size 1, it's a tensor of shape (1,)).
     """
     """INSERT YOUR CODE HERE, overrun return."""
-    return np.random.rand(256, 256, 3), torch.randint(0, 2, (1,))
+
+    from pytorch_grad_cam import GradCAM
+    from pytorch_grad_cam.utils.image import show_cam_on_image
+
+    target_layers = [model.conv3]
+    dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=True)
+
+    for batch_idx, (inputs, targets) in enumerate(dataloader):
+        input_tensor = inputs # Create an input tensor image for your model..
+
+        # Construct the CAM object once, and then re-use it on many images:
+        cam = GradCAM(model=model, target_layers=target_layers)
+
+        # You can also pass aug_smooth=True and eigen_smooth=True, to apply smoothing.
+        grayscale_cam = cam(input_tensor=input_tensor, targets=None, aug_smooth=True)
+
+        # In this example grayscale_cam has only one image in the batch:
+        grayscale_cam = grayscale_cam.transpose(1, 2, 0)
+        norm_inputs = inputs[0].numpy().transpose(1, 2, 0)
+        norm_inputs = (norm_inputs - norm_inputs.min()) / (norm_inputs.max() - norm_inputs.min())
+        visualization = show_cam_on_image(norm_inputs, grayscale_cam, use_rgb=True)
+
+        break
+
+    return visualization, targets
 
 
 def main():

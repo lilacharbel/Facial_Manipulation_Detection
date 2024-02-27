@@ -43,12 +43,12 @@ dependencies:
   - pillow=8.3.1=py39h2c7a002_0
   - pip=21.2.4=py37h06a4308_0
   - python=3.9.6=h12debd9_0
-  - pytorch=1.9.0=py3.9_cuda10.2_cudnn7.6.5_0
+#  - pytorch=1.9.0=py3.9_cuda10.2_cudnn7.6.5_0
   - readline=8.1=h27cfd23_0
   - setuptools=52.0.0=py39h06a4308_0
   - sqlite=3.36.0=hc218d9a_0
   - tk=8.6.10=hbc83047_0
-  - torchvision=0.10.0=py39_cu102
+#  - torchvision=0.10.0=py39_cu102
   - typing_extensions=3.10.0.0=pyh06a4308_0
   - tzdata=2021a=h5d7bf9c_0
   - wheel=0.37.0=pyhd3eb1b0_0
